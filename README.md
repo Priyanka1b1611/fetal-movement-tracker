@@ -1,50 +1,81 @@
-# Welcome to your Expo app 👋
+# Daily Fetal Movement Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A simple React Native (Expo) application that allows users to track daily fetal movements. The app includes Home screen to view past records and Counter screen to track new session. All data is stored locally without any backend.
 
-## Get started
+## Prerequisites
 
-1. Install dependencies
+Node.js (v18 or later recommended)
+npm or yarn
+Expo CLI (via npx expo)
+Android Emulator / iOS Simulator / Physical device with Expo Go
+
+## To Run the Project
+
+1. Clone the repository
+
+   ```bash
+   git clone <your-github-repo-link>
+   cd <project-folder>
+   ```
+
+2. Install dependencies
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Start the app
 
    ```bash
-   npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
+4. Run the app
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Press a to open in Android Emulator
+Press i to open in iOS Simulator (Mac only)
+Or scan the QR code using Expo Go on your mobile device
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Libraries Used
 
-## Get a fresh project
+1. Expo – React Native framework
+2. Expo Router – File-based navigation
+3. @react-native-async-storage/async-storage – Local data persistence
+4. react-native-safe-area-context – Safe area handling
 
-When you're ready, run:
+## Data Structure for Storing Records
 
-```bash
-npm run reset-project
-```
+1. All sessions are stored locally using AsyncStorage under the key: "sessions"
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Each record is stored as a structured JSON object:
 
-## Learn more
+type Session = {
+id: string; // Unique identifier (Date.now().toString())
+date: string; // ISO date string
+minutes: number; // Duration - minutes
+kicks: number; // Total kicks recorded
+};
 
-To learn more about developing your project with Expo, look at the following resources:
+## Data Handling
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+1. Sessions are saved using JSON.stringify()
+2. Sessions are loaded using JSON.parse()
+3. Records are sorted by date (latest first)
+4. Defensive checks prevent displaying undefined values
+5. Data persists after app restart
 
-## Join the community
+## Assumptions Made
 
-Join our community of developers creating universal apps.
+1. The session is considered complete when the user records 10 kicks.
+2. Data is stored locally only (no backend or authentication).
+3. Each session is saved manually by pressing the Save button.
+4. If the user navigates back without saving, the session is discarded.
+5. Duration is stored as minutes and seconds for easier UI rendering.
+6. No multi-user support is required.
+7. App works in offline mode only.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Build (Android APK)
+
+To generate an APK using Expo EAS:
+
+eas build -p android --profile preview
